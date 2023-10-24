@@ -22,5 +22,5 @@ jobs:
         with:
           version: latest
 
-      - run: 'supabase link --project-ref  ${{ secrets.PREVIEW_PROJECT_ID }}'
-      - run: 'supabase db push'
+      - run: supabase link --project-ref  ${{ secrets.PREVIEW_PROJECT_ID }}
+      - run: supabase db push
