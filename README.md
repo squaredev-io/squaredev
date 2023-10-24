@@ -1,45 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Squaredev
 
-## Getting Started
+Squaredev is an open source platform for developers to create stable and production grade AI applications.
 
-First, run the development server:
+- [x] LLMs (open source and proprietary)
+- [x] Vectors/Embeddings
+- [] Memory (coming soon)
+- [] Monitoring (coming soon)
+- [] Fine-tuning (coming soon)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Documentation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Full documentation (coming soon)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Full details on how to contribute will be available soon. For now please leave a ⭐️ and watch the repo.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Status
 
-## Learn More
+- [x] Alpha: We are testing Squaredev with a closed set of customers
+- [] Public Alpha: Anyone can sign up over at Squaredev.io. But go easy on us, there are a few kinks
+- [] Public Beta: Stable enough for most use-cases
+- [] Public: General Availability
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Shadcn (components)
-
-To add a new component to the project and match the project scructure you can either:
-
-- Copy and paste the component code you want that is listed in the shadcn documentation, while following the project structure `components/{componentName}/index.tsx`
-- Using the cli. Open a terminal window and run `npx shadcn-ui@latest add {componentName}`. This will create a new folder containing the component file `components/ui/{componentName}.tsx`. Then, you can move this file to the `components` directory and rename the folder/file accordinly.
-
-Finally, make sure to export default the component at the bottom of the file: `export default {componentName}`
+We are currently in Alpha. Watch "releases" of this repo to get notified of major updates.
