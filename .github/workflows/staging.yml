@@ -20,7 +20,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 1.99.5
 
       - run: supabase link --project-ref  ${{ secrets.PREVIEW_PROJECT_ID }}
       - run: supabase db push
