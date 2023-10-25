@@ -7,7 +7,7 @@ export function GET() {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Squaredev Public API',
+        title: 'SquareDev Public API',
         version: 'beta',
       },
     },

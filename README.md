@@ -5,9 +5,9 @@
 
 ---
 
-# Squaredev
+# SquareDev
 
-Squaredev is an open source platform for developers to create stable and production grade AI applications.
+SquareDev is an open source platform for developers to create stable and production grade AI applications.
 
 - [x] LLMs (open source and proprietary)
 - [x] Vectors/Embeddings
@@ -21,10 +21,15 @@ Full documentation (coming soon)
 
 Full details on how to contribute will be available soon. For now please leave a ⭐️ and watch the repo.
 
+## Community & Support
+
+- [GitHub Discussions](https://github.com/squaredev-io/squaredev/discussions). Best for: help with building, discussion about best practices.
+- [GitHub Issues](https://github.com/squaredev-io/squaredev/issues). Best for: bugs and errors you encounter using SquareDev.
+
 ## Status
 
-- [x] Alpha: We are testing Squaredev with a closed set of customers
-- [ ] Public Alpha: Anyone can sign up over at Squaredev.io. But go easy on us, there are a few kinks
+- [x] Alpha: We are testing SquareDev with a closed set of customers
+- [ ] Public Alpha: Anyone can sign up over at SquareDev.io. But go easy on us, there are a few kinks
 - [ ] Public Beta: Stable enough for most use-cases
 - [ ] Public: General Availability
 
