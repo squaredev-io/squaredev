@@ -13,6 +13,7 @@ SquareDev is an open source platform for developers to create stable and product
 - [x] Vectors/Embeddings
 - [ ] Memory (coming soon)
 - [ ] Monitoring (coming soon)
+- [ ] Analytics (coming soon)
 - [ ] Fine-tuning (coming soon)
 
 ## Documentation
