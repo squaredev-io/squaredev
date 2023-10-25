@@ -1,3 +1,10 @@
+<p align="center">
+<img src="https://raw.githubusercontent.com/squaredev-io/squaredev/preview/public/sqd-dark-trans.png#gh-light-mode-only">
+<img src="https://raw.githubusercontent.com/squaredev-io/squaredev/preview/public/sqd-light-trans.png#gh-dark-mode-only">
+</p>
+
+---
+
 # Squaredev
 
 Squaredev is an open source platform for developers to create stable and production grade AI applications.
