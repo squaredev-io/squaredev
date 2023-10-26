@@ -48,7 +48,7 @@ context('GET /kb', () => {
       },
       body: [
         {
-          content: 'A random sentence about Squaredev',
+          content: 'A random sentence about SquareDev',
           source: 'string',
           metadata: { string: 'string' },
         },
