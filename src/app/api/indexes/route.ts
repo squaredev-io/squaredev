@@ -1,14 +1,14 @@
 /**
  * @swagger
- * /api/knowledge-bases:
+ * /api/indexes:
  *   get:
- *     summary: Get all knowledge bases for an app
- *     description: Returns all knowledge bases associated with the specified app
+ *     summary: Get all indexes for a project
+ *     description: Returns all indexes.
  *     tags:
- *       - Knowledge Bases
+ *       - Indexes
  *     responses:
  *       200:
- *         description: Returns all knowledge bases associated with the specified app
+ *         description: Returns all indexes associated with the specified project
  *         content:
  *           application/json:
  *             schema:
@@ -29,24 +29,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { authApiKey } from '@/lib/public-api/auth';
 import { supabaseExecute } from '@/lib/public-api/database';
-import { KnowledgeBase } from '@/types/supabase-entities';
+import { Index } from '@/types/supabase-entities';
 
 export async function GET(request: NextRequest) {
-  const { data: app, error: authError } = await authApiKey(headers());
+  const { data: project, error: authError } = await authApiKey(headers());
 
-  if (!app || authError) {
+  if (!project || authError) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const query = `
-    SELECT knowledge_bases.*
-    FROM knowledge_bases
-    JOIN apps_knowledge_bases ON knowledge_bases.id = apps_knowledge_bases.knowledge_base_id
-    JOIN apps ON apps_knowledge_bases.app_id = apps.id
-    WHERE apps.api_key = '${app.api_key}'
-  `;
+  const query = `select * from indexes where project_id = '${project.id}'`;
 
-  const { data, error } = await supabaseExecute<KnowledgeBase>(query);
+  const { data, error } = await supabaseExecute<Index>(query);
 
   if (error) {
     return NextResponse.json({ data, error }, { status: 400 });

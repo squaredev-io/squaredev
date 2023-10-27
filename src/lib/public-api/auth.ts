@@ -1,4 +1,4 @@
-import { App } from '@/types/supabase-entities';
+import { Project } from '@/types/supabase-entities';
 import { Result, supabaseExecute } from './database';
 
 export function getApiKey(headers: any) {
@@ -15,7 +15,7 @@ export function getApiKey(headers: any) {
   return key;
 }
 
-export async function authApiKey(headers: any): Promise<Result<App>> {
+export async function authApiKey(headers: any): Promise<Result<Project>> {
   const apiKey = getApiKey(headers);
   if (!apiKey) {
     return {
@@ -28,8 +28,8 @@ export async function authApiKey(headers: any): Promise<Result<App>> {
     };
   }
 
-  const query = `select * from apps where api_key = '${apiKey}'`;
-  const { data, error } = await supabaseExecute<App>(query);
+  const query = `select * from projects where api_key = '${apiKey}'`;
+  const { data, error } = await supabaseExecute<Project>(query);
   if (error) {
     return { data, error };
   }
@@ -40,7 +40,7 @@ export async function authApiKey(headers: any): Promise<Result<App>> {
       error: {
         code: '401',
         hint: '',
-        message: 'App not found.',
+        message: 'Invalid API key.',
       },
     };
   }

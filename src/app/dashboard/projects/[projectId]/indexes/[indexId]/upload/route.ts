@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { knowledgeBaseId: string } }
+  { params }: { params: { indexId: string } }
 ) {
   // TODO: This should be also consider the api key
   const supabase = createRouteHandlerClient({ cookies });
@@ -46,7 +46,7 @@ export async function POST(
     embedding: embeddings[index] as unknown as string, // This is not right. The type generation from supabase is wrong here.
     content: doc.pageContent,
     metadata: doc.metadata.loc,
-    knowledge_base_id: params.knowledgeBaseId,
+    index_id: params.indexId,
     source: file.name,
   }));
 

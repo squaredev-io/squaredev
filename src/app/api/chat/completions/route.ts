@@ -67,19 +67,19 @@ interface ChatCompletionRequest {
     user: string;
   };
   model: string;
-  knowledgeBaseId?: string;
+  indexId?: string;
   withMemory?: boolean;
 }
 
 // Add documents to a knowledge base
 export async function POST(request: NextRequest) {
-  const { data: app, error: authError } = await authApiKey(headers());
+  const { data: project, error: authError } = await authApiKey(headers());
 
-  if (!app || authError) {
+  if (!project || authError) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const { messages, model, knowledgeBaseId }: ChatCompletionRequest =
+  const { messages, model, indexId }: ChatCompletionRequest =
     await request.json();
 
   if (!availableModels.includes(model)) {
@@ -89,13 +89,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (knowledgeBaseId && !messages.user.includes('{context}')) {
-    const error = `The user message must include {context} placeholder to use a knowledge base.`;
+  if (indexId && !messages.user.includes('{context}')) {
+    const error = `The user message must include {context} placeholder to use an index.`;
     return NextResponse.json({ error }, { status: 400 });
   }
 
   let promptMessage = messages.user;
-  if (knowledgeBaseId) {
+  if (indexId) {
     // If user specifies a knowledge base, we use RAG.
     const openAIEmbeddings = new OpenAIEmbeddings();
     const embeddings = await openAIEmbeddings.embedDocuments([messages.user]);
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     const query = `
       select 1 - (embedding <=> '[${embeddings.toString()}]') as cosine_similarity, * 
       from documents
-      where knowledge_base_id = '${knowledgeBaseId}'
+      where index_id = '${indexId}'
       order by cosine_similarity desc
       limit 3;
     `;

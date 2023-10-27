@@ -5,17 +5,18 @@ import { ChangeEvent, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
-type NewAppFormProps = {
+
+type NewProjectFormProps = {
   closeForm: () => void;
 };
 
-export default function NewApp({ closeForm }: NewAppFormProps) {
+export default function NewProject({ closeForm }: NewProjectFormProps) {
   const supabase = createClientComponentClient<Database>();
   const [formData, setFormData] = useState({ name: '' });
 
-  const createNewApp = async (e: any) => {
+  const createNewProject = async (e: any) => {
     e.preventDefault();
-    const { data, error } = await supabase.from('apps').insert({
+    const { data, error } = await supabase.from('projects').insert({
       name: formData.name,
     });
     if (error) {
@@ -32,7 +33,7 @@ export default function NewApp({ closeForm }: NewAppFormProps) {
   };
 
   return (
-    <form className="new-app" onSubmit={createNewApp}>
+    <form className="new-project" onSubmit={createNewProject}>
       <div className="flex w-full max-w-sm items-center space-x-2">
         <Input
           type="text"
