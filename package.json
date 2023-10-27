@@ -11,6 +11,7 @@
     "diff": "npx supabase db diff -f feature",
     "migration": "npx supabase migration new feature",
     "update-types": "npx supabase gen types typescript --local > src/types/supabase.ts",
+    "update-db": "npm run diff && npm run reset && npm run update-types",
     "prepare": "husky install",
     "pretty-staged": "pretty-quick --staged",
     "pretty-all": "prettier {*,**/*}.{js,ts,tsx,json,css,md} --write --no-error-on-unmatched-pattern",

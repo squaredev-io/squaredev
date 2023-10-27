@@ -4,45 +4,33 @@ import { Database } from '@/types/supabase';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import NewApp from '@/components/NewApp';
-import NewKnowledgeBase from '@/components/NewKnowledgeBase';
-import { App, KnowledgeBase } from '@/types/supabase-entities';
+import NewProject from '@/components/NewProject';
+import { Project } from '@/types/supabase-entities';
 import { Button } from '@/components/Button';
 
 export default function Dashboard() {
   const supabase = createClientComponentClient<Database>();
-  const [apps, setApps] = useState<App[]>([]);
-  const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([]);
-  const [createNewAppOpen, setCreateNewAppOpen] = useState(false);
-  const [createNewKnowledgeBaseOpen, setCreateNewKnowledgeBaseOpen] =
-    useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [createNewProjectOpen, setCreateNewProjectOpen] = useState(false);
 
   useEffect(() => {
     getData();
-  }, [createNewAppOpen, createNewKnowledgeBaseOpen]);
+  }, [createNewProjectOpen]);
 
   const getData = async () => {
-    const { data: apps, error: appsError } = await supabase
-      .from('apps')
+    const { data: projects, error: projectsError } = await supabase
+      .from('projects')
       .select('*');
 
-    const { data: knowledgeBases, error: knowledgeBasesError } = await supabase
-      .from('knowledge_bases')
-      .select('*');
-
-    if (appsError || knowledgeBasesError) {
-      alert(
-        `Error fetching data: Apps: ${appsError?.message} Knowledge Bases: ${knowledgeBasesError?.message}`
-      );
+    if (projectsError) {
+      alert(`Error fetching data: projects: ${projectsError?.message}`);
     }
 
-    setApps(apps || []);
-    setKnowledgeBases(knowledgeBases || []);
+    setProjects(projects || []);
   };
 
-  const toggleNewAppOpen = () => setCreateNewAppOpen(!createNewAppOpen);
-  const toggleNewKnowledgeBaseOpen = () =>
-    setCreateNewKnowledgeBaseOpen(!createNewKnowledgeBaseOpen);
+  const toggleNewProjectOpen = () =>
+    setCreateNewProjectOpen(!createNewProjectOpen);
 
   return (
     <main className="flex min-h-screen flex-col justify-between p-24">
@@ -51,39 +39,23 @@ export default function Dashboard() {
       </form>
       <h3>Dashboard</h3>
       <div>
-        <Button onClick={toggleNewAppOpen}>Create new App</Button>
-        {createNewAppOpen && <NewApp closeForm={toggleNewAppOpen} />}
+        <Button onClick={toggleNewProjectOpen}>Create new project</Button>
+        {createNewProjectOpen && (
+          <NewProject closeForm={toggleNewProjectOpen} />
+        )}
       </div>
-      <div>
-        <Button onClick={toggleNewKnowledgeBaseOpen}>
-          Create new Knowledge Base
-        </Button>
-      </div>
-      {createNewKnowledgeBaseOpen && (
-        <NewKnowledgeBase closeForm={toggleNewKnowledgeBaseOpen} />
-      )}
       <hr />
-      Apps:
+      Projects:
       <ul>
-        {apps.map((app) => (
-          <li key={app.id}>
-            <Link href={`/dashboard/apps/${app.id}`}>
-              <p>{app.name}</p>
+        {projects.map((project) => (
+          <li key={project.id}>
+            <Link href={`/dashboard/projects/${project.id}`}>
+              <p>{project.name}</p>
             </Link>
           </li>
         ))}
       </ul>
       <hr />
-      Knowledge Bases:
-      <ul>
-        {knowledgeBases.map((kb) => (
-          <li key={kb.id}>
-            <Link href={`/dashboard/knowledge-bases/${kb.id}`}>
-              <p>{kb.name}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
     </main>
   );
 }

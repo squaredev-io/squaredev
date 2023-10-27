@@ -3,18 +3,17 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useState, useEffect } from 'react';
 import { Database } from '@/types/supabase';
-import { KnowledgeBase, Document } from '@/types/supabase-entities';
+import { Index, Document } from '@/types/supabase-entities';
+import { param } from 'cypress/types/jquery';
 
-export default function KnowledgeBase({
+export default function Index({
   params,
 }: {
-  params: { knowledgeBaseId: string };
+  params: { projectId: string; indexId: string };
 }) {
   const supabase = createClientComponentClient<Database>();
   const [file, setFile] = useState<File>();
-  const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeBase | null>(
-    null
-  );
+  const [index, setIndex] = useState<Index | null>(null);
   const [documents, setDocuments] = useState<Document[] | []>([]);
   const [editingId, setEditingId] = useState<Document['id'] | null>(null);
   const [editedText, setEditedText] = useState('');
@@ -50,26 +49,26 @@ export default function KnowledgeBase({
   };
 
   const getData = async () => {
-    const { data: knowledgeBase, error: knowledgeBaseError } = await supabase
-      .from('knowledge_bases')
+    const { data: index, error: indexError } = await supabase
+      .from('indexes')
       .select('*')
-      .eq('id', params.knowledgeBaseId)
+      .eq('id', params.indexId)
       .single();
 
-    if (knowledgeBaseError) {
-      alert(`Error fetching data:Knowledge Base: ${knowledgeBaseError}`);
+    if (indexError) {
+      alert(`Error fetching data: ${indexError}`);
     }
 
     const { data: documents, error: documentsError } = await supabase
       .from('documents')
       .select('*')
-      .eq('knowledge_base_id', params.knowledgeBaseId);
+      .eq('index_id', params.indexId);
 
     if (documentsError) {
       alert(`Error fetching data:Documents: ${documentsError}`);
     }
 
-    setKnowledgeBase(knowledgeBase || null);
+    setIndex(index || null);
     setDocuments(documents || []);
   };
 
@@ -86,7 +85,7 @@ export default function KnowledgeBase({
       data.set('file', file);
 
       const res = await fetch(
-        `/dashboard/knowledge-bases/${params.knowledgeBaseId}/upload`,
+        `/dashboard/projects/${params.projectId}/indexes/${params.indexId}/upload`,
         {
           method: 'POST',
           body: data,
@@ -102,7 +101,7 @@ export default function KnowledgeBase({
 
   return (
     <>
-      <h1>Knowledge Base: {knowledgeBase?.name || 'Not found'}</h1>
+      <h1>Index: {index?.name || 'Not found'}</h1>
       <p>Upload document</p>
       <form onSubmit={onSubmit}>
         <input

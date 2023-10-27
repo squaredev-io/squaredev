@@ -6,19 +6,17 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Input } from '@/components/Input';
 import { Button } from '../Button';
 
-type NewKnowledgeBaseFormProps = {
+type NewIndexFormProps = {
   closeForm: () => void;
 };
 
-export default function NewKnowledgeBase({
-  closeForm,
-}: NewKnowledgeBaseFormProps) {
+export default function NewIndex({ closeForm }: NewIndexFormProps) {
   const supabase = createClientComponentClient<Database>();
   const [formData, setFormData] = useState({ name: '' });
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    const { data, error } = await supabase.from('knowledge_bases').insert({
+    const { data, error } = await supabase.from('indexes').insert({
       name: formData.name,
     });
     if (error) {

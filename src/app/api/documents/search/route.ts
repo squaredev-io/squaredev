@@ -36,16 +36,16 @@ import { supabaseExecute } from '../../../../lib/public-api/database';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 
 export async function POST(request: NextRequest) {
-  const { data: app, error: authError } = await authApiKey(headers());
+  const { data: project, error: authError } = await authApiKey(headers());
 
-  if (!app || authError) {
+  if (!project || authError) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const knowledgeBaseId = request.nextUrl.searchParams.get('knowledge_base_id');
-  if (!knowledgeBaseId) {
+  const indexId = request.nextUrl.searchParams.get('index_id');
+  if (!indexId) {
     return NextResponse.json(
-      { error: 'Missing knowledge_base_id query parameter' },
+      { error: 'Missing index_id query parameter' },
       { status: 400 }
     );
   }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
   const query = `
     select 1 - (embedding <=> '[${embeddings.toString()}]') as cosine_similarity, * 
     from documents
-    where knowledge_base_id = '${knowledgeBaseId}'
+    where index_id = '${indexId}'
     order by cosine_similarity desc
     limit 3;
   `;

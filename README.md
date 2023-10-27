@@ -7,14 +7,13 @@
 
 # SquareDev
 
-SquareDev is an open source platform for developers to create stable and production grade AI applications.
+SquareDev is the full stack platform for developers to build, deploy, and manage LLM applications via a simple API.
 
 - [x] LLMs (open source and proprietary)
 - [x] Vectors/Embeddings
 - [ ] Memory (coming soon)
 - [ ] Monitoring (coming soon)
 - [ ] Analytics (coming soon)
-- [ ] Fine-tuning (coming soon)
 
 ## Documentation
 

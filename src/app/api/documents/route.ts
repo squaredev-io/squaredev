@@ -2,8 +2,8 @@
  * @swagger
  * /api/documents:
  *   get:
- *     summary: Get all documents from a knowledge base
- *     description: Returns all documents from the specified knowledge base
+ *     summary: Get all documents from a index
+ *     description: Returns all documents from the specified index
  *     tags:
  *       - Documents
  *     parameters:
@@ -12,10 +12,10 @@
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the knowledge base to retrieve documents from
+ *         description: The ID of the index to retrieve documents from
  *     responses:
  *       200:
- *         description: Returns all documents from the specified knowledge base
+ *         description: Returns all documents from the specified index
  *         content:
  *           application/json:
  *             schema:
@@ -32,8 +32,8 @@
  *                   description: The error message
  *
  *   post:
- *     summary: Add documents to a knowledge base
- *     description: Adds new documents to the specified knowledge base
+ *     summary: Add documents to a index
+ *     description: Adds new documents to the specified index
  *     tags:
  *       - Documents
  *     parameters:
@@ -42,7 +42,7 @@
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the knowledge base to add documents to
+ *         description: The ID of the index to add documents to
  *     requestBody:
  *       description: The document content, source, and metadata
  *       required: true
@@ -72,27 +72,23 @@ import { Document, DocumentInsert } from '@/types/supabase-entities';
 import { supabaseExecute } from '@/lib/public-api/database';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 
-// Get all documents from a knowledge base
+// Get all documents from a index
 export async function GET(request: NextRequest) {
-  const { data: app, error: authError } = await authApiKey(headers());
+  const { data: project, error: authError } = await authApiKey(headers());
 
-  if (!app || authError) {
+  if (!project || authError) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const knowledgeBaseId = request.nextUrl.searchParams.get('knowledge_base_id');
-  if (!knowledgeBaseId) {
+  const indexId = request.nextUrl.searchParams.get('index_id');
+  if (!indexId) {
     return NextResponse.json(
-      { error: 'Missing knowledge_base_id query parameter' },
+      { error: 'Missing index_id query parameter' },
       { status: 400 }
     );
   }
 
-  const query = `
-    SELECT *
-    FROM documents
-    WHERE knowledge_base_id = '${knowledgeBaseId}'
-  `;
+  const query = `SELECT * FROM documents WHERE index_id = '${indexId}'`;
 
   const { data, error } = await supabaseExecute<Document>(query);
 
@@ -109,19 +105,18 @@ interface DocumentPostRequest {
   metadata: any;
 }
 
-// Add documents to a knowledge base
+// Add documents to a index
 export async function POST(request: NextRequest) {
-  const { data: app, error: authError } = await authApiKey(headers());
+  const { data: project, error: authError } = await authApiKey(headers());
 
-  if (!app || authError) {
+  if (!project || authError) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const knowledgeBaseId = request.nextUrl.searchParams.get('knowledge_base_id');
-
-  if (!knowledgeBaseId) {
+  const indexId = request.nextUrl.searchParams.get('index_id');
+  if (!indexId) {
     return NextResponse.json(
-      { error: 'Missing knowledge_base_id query parameter' },
+      { error: 'Missing index_id query parameter' },
       { status: 400 }
     );
   }
@@ -148,19 +143,19 @@ export async function POST(request: NextRequest) {
     embedding: embeddings[index] as unknown as string, // This is not right. The type generation from supabase is wrong here.
     content: doc.content,
     metadata: doc.metadata,
-    knowledge_base_id: knowledgeBaseId,
+    index_id: indexId,
     source: doc.source,
-    user_id: app.user_id as string,
+    user_id: project.user_id as string,
   }));
 
   const query = `
-  INSERT INTO documents (embedding, content, metadata, knowledge_base_id, source, user_id)
+  INSERT INTO documents (embedding, content, metadata, index_id, source, user_id)
   VALUES ${documentInsert
     .map(
       (doc) =>
         `('[${doc.embedding.toString()}]', '${doc.content}', '${JSON.stringify(
           doc.metadata
-        )}', '${doc.knowledge_base_id}', '${doc.source}', '${doc.user_id}')`
+        )}', '${doc.index_id}', '${doc.source}', '${doc.user_id}')`
     )
     .join(',')}
   RETURNING *`;

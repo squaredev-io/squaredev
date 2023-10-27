@@ -1,26 +1,26 @@
 import { supabaseExecute } from '../../src/lib/public-api/database';
-import { App, KnowledgeBase } from '../../src/types/supabase-entities';
+import { Project, Index } from '../../src/types/supabase-entities';
 
 let state = {
-  app: null as App | null,
-  knowledgeBase: null as KnowledgeBase | null,
+  project: null as Project | null,
+  index: null as Index | null,
 };
 
-context('GET /kb', () => {
+context('Test API', () => {
   before(async () => {});
 
-  it('gets the app to be tested', () => {
-    const query = `select * from apps where name = 'Test App'`;
+  it('gets the project to be tested', () => {
+    const query = `select * from projects where name = 'Test project'`;
     cy.task('supabaseExecute', query).then(({ data, error }: any) => {
-      expect(data[0].name).to.eq('Test App');
-      state.app = data[0];
+      expect(data[0].name).to.eq('Test project');
+      state.project = data[0];
     });
   });
 
-  it('tests getting the knowledge base via the api key ', () => {
+  it('tests getting the index via the api key ', () => {
     cy.request({
       method: 'GET',
-      url: '/api/knowledge-bases',
+      url: '/api/indexes',
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(401);
@@ -28,23 +28,23 @@ context('GET /kb', () => {
 
     cy.request({
       method: 'GET',
-      url: '/api/knowledge-bases',
+      url: '/api/indexes',
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
       expect(response.body.length).to.greaterThan(0);
-      state.knowledgeBase = response.body[0];
+      state.index = response.body[0];
     });
   });
 
-  it('uploads documents to a knowledge base ', () => {
+  it('uploads documents to a index ', () => {
     cy.request({
       method: 'POST',
-      url: `/api/documents?knowledge_base_id=${state.knowledgeBase?.id}`,
+      url: `/api/documents?index_id=${state.index?.id}`,
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
       body: [
         {
@@ -59,12 +59,12 @@ context('GET /kb', () => {
     });
   });
 
-  it('gets the documents of a knowledge base', () => {
+  it('gets the documents of an index', () => {
     cy.request({
       method: 'GET',
-      url: `/api/documents?knowledge_base_id=${state.knowledgeBase?.id}`,
+      url: `/api/documents?index_id=${state.index?.id}`,
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
@@ -72,12 +72,12 @@ context('GET /kb', () => {
     });
   });
 
-  it('gets the documents of a knowledge base that are contextually similar to the search term', () => {
+  it('gets the documents of an index that are contextually similar to the search term', () => {
     cy.request({
       method: 'POST',
-      url: `/api/documents/search?knowledge_base_id=${state.knowledgeBase?.id}&search=A random`,
+      url: `/api/documents/search?index_id=${state.index?.id}&search=A random`,
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
     }).then((response) => {
       console.log(response.body);
@@ -92,7 +92,7 @@ context('GET /kb', () => {
       method: 'POST',
       url: `/api/chat/completions?model=gpt-3.5-turbo`,
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
       body: {
         model: 'gpt-3.5-turbo',
@@ -102,8 +102,6 @@ context('GET /kb', () => {
         },
       },
     }).then((response) => {
-      console.log(response.body);
-
       expect(response.status).to.eq(200);
     });
   });
@@ -113,7 +111,7 @@ context('GET /kb', () => {
       method: 'POST',
       url: `/api/chat/completions?model=gpt-3.5-turbo`,
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
       body: {
         model: 'gpt-3.5-turbo',
@@ -122,11 +120,9 @@ context('GET /kb', () => {
             'You are a helpful assistant. Try to answer the question using the given context.',
           user: 'Context: {context} \nQuestion: What is the name of the company?',
         },
-        knowledgeBaseId: state.knowledgeBase?.id,
+        knowledgeBaseId: state.index?.id,
       },
     }).then((response) => {
-      console.log(response.body);
-
       expect(response.status).to.eq(200);
     });
   });
@@ -137,7 +133,7 @@ context('GET /kb', () => {
       url: `/api/chat/completions?model=gpt-3.5-turbo`,
       failOnStatusCode: false,
       headers: {
-        authentication: `Bearer ${state.app?.api_key}`,
+        authentication: `Bearer ${state.project?.api_key}`,
       },
       body: {
         model: 'gpt-3.5-turbo',
@@ -146,11 +142,9 @@ context('GET /kb', () => {
             'You are a helpful assistant. Try to answer the question using the given context.',
           user: 'Context: no context placeholder \nQuestion: What is the name of the company?',
         },
-        knowledgeBaseId: state.knowledgeBase?.id,
+        indexId: state.index?.id,
       },
     }).then((response) => {
-      console.log(response.body);
-
       expect(response.status).to.eq(400);
     });
   });

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { MainNav } from './components/nav';
+import Button from '@/components/Button';
+import Link from 'next/link';
 
 export default function LandingPage() {
   return (
@@ -22,6 +24,9 @@ export default function LandingPage() {
             vel. Nullam euismod, nisl vel lacinia bibendum, velit sapien
             bibendum nunc, vel bibendum sapien sapien vel velit.
           </p>
+          <Link href="/login">
+            <Button className="mr-4">Get Started</Button>
+          </Link>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="bg-white shadow-md rounded-md p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
