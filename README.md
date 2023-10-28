@@ -7,19 +7,32 @@
 
 # SquareDev
 
-SquareDev is the full stack platform for developers to build, deploy, and manage LLM applications via a simple API.
+SquareDev for developing applications powered by language models. Use cases include:
+
+- 📈 Chat with your data
+- 💬 Generate personalized text (emails, newsletter, notifications)
+- 🤖 Chatbots
+- 📊 Analyzing structured data
+- 🔎 Semantic search
+- 📚 Text & knowledge extraction
+- 🧹 Structure unstructured data
+
+## Features
 
 - [x] Document Loaders
   - [x] PDF
-  - [ ] Web pages
+  - [ ] JSON (coming soon)
+  - [ ] Website (coming soon)
 - [x] Vectors & Embeddings
   - [x] [Retrieval Augmented Generation](https://www.perplexity.ai/search/Retrieval-Augmented-Generation-wdAKdu4sSE.s1td7mtXqEQ?s=c)
   - [x] [Semantic search](https://www.perplexity.ai/search/semantic-search-eXS9K0oARMizIBbAkSvSAw?s=c)
   - [ ] Memory (coming soon)
-- [x] Large Language Models
+- [x] Hosted Large Language Models (OSS & APIs)
   - [x] Open AI
   - [ ] [HuggingFaceH4/zephyr-7b-beta)](https://huggingface.co/HuggingFaceH4/zephyr-7b-beta)
 - [ ] Monitoring (coming soon)
+  - [ ] Usage (coming soon)
+  - [ ] User feedback (coming soon)
 
 ![Architecture](/public/steps.png 'Architecture')
 
@@ -45,7 +58,7 @@ We are currently in Alpha. Watch "releases" of this repo to get notified of majo
 
 ## How it works
 
-Squaredev is a combination of open source tools that makes it easy to build with LLMs. Sitting on the shoulder of giant like [LangChain](https://www.langchain.com/), [Hugging Face](https://huggingface.co/), [Supabase](https://supabase.com/) and others. [SquareDev](https://squaredev.io/) is building the tools for developers with or without AI expertise to build with LLMs.
+SquareDev is a combination of open source tools that makes it easy to build with LLMs. Sitting on the shoulder of giant like [LangChain](https://www.langchain.com/), [Hugging Face](https://huggingface.co/), [Supabase](https://supabase.com/) and others. [SquareDev](https://squaredev.io/) is building the tools for developers with or without AI expertise to build with LLMs.
 
 ### Architecture
 
