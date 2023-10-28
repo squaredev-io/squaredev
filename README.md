@@ -7,7 +7,9 @@
 
 # SquareDev
 
-SquareDev for developing applications powered by language models. Use cases include:
+SquareDev is the platform for developing applications powered by language models.
+
+Use cases include:
 
 - 📈 Chat with your data
 - 💬 Generate personalized text (emails, newsletter, notifications)
