@@ -35,7 +35,7 @@ import { authApiKey } from '../../../../lib/public-api/auth';
 import { supabaseExecute } from '../../../../lib/public-api/database';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const { data: project, error: authError } = await authApiKey(headers());
 
   if (!project || authError) {
@@ -63,10 +63,10 @@ export async function POST(request: NextRequest) {
 
   // Search for similar documents using cosine similarity
   const query = `
-    select 1 - (embedding <=> '[${embeddings.toString()}]') as cosine_similarity, * 
+    select 1 - (embedding <=> '[${embeddings.toString()}]') as similarity, id, content, metadata, index_id, source, user_id, created_at
     from documents
     where index_id = '${indexId}'
-    order by cosine_similarity desc
+    order by similarity desc
     limit 3;
   `;
 

@@ -1,61 +1,7 @@
-/**
- * @swagger
- * /api/chat/completions:
- *   post:
- *     summary: Get a response from the chat completions
- *     description: Returns a response from the specified model based on the provided messages
- *     tags:
- *       - Chat
- *     requestBody:
- *       description: The messages to send to the chatbot and the model to use
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               messages:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     text:
- *                       type: string
- *                       description: The message text
- *                     user:
- *                       type: string
- *                       description: The user ID
- *                   example:
- *                     text: "Hello, how are you?"
- *                     user: "123"
- *               model:
- *                 type: string
- *                 description: The name of the OpenAI model to use
- *                 example: "gpt-3.5-turbo"
- *     responses:
- *       200:
- *         description: Returns a response from the OpenAI chatbot
- *         content:
- *           application/json:
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: The error message
- */
-
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { authApiKey } from '@/lib/public-api/auth';
 import { OpenAI } from 'openai';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { supabaseExecute } from '@/lib/public-api/database';
-import { Document } from '@/types/supabase-entities';
 // import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
@@ -67,8 +13,6 @@ interface ChatCompletionRequest {
     user: string;
   };
   model: string;
-  indexId?: string;
-  withMemory?: boolean;
 }
 
 // Add documents to a knowledge base
@@ -79,43 +23,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const { messages, model, indexId }: ChatCompletionRequest =
-    await request.json();
+  const { messages, model }: ChatCompletionRequest = await request.json();
 
   if (!availableModels.includes(model)) {
     return NextResponse.json(
       { error: `Model ${model} not found.` },
       { status: 400 }
     );
-  }
-
-  if (indexId && !messages.user.includes('{context}')) {
-    const error = `The user message must include {context} placeholder to use an index.`;
-    return NextResponse.json({ error }, { status: 400 });
-  }
-
-  let promptMessage = messages.user;
-  if (indexId) {
-    // If user specifies a knowledge base, we use RAG.
-    const openAIEmbeddings = new OpenAIEmbeddings();
-    const embeddings = await openAIEmbeddings.embedDocuments([messages.user]);
-
-    const query = `
-      select 1 - (embedding <=> '[${embeddings.toString()}]') as cosine_similarity, * 
-      from documents
-      where index_id = '${indexId}'
-      order by cosine_similarity desc
-      limit 3;
-    `;
-
-    const { data, error } = await supabaseExecute<Document>(query);
-
-    if (error) {
-      return NextResponse.json({ error }, { status: 400 });
-    }
-
-    const context = data[0]?.content || '';
-    promptMessage = messages.user.replace('{context}', context);
   }
 
   const response = await openai.chat.completions.create({
@@ -128,7 +42,7 @@ export async function POST(request: NextRequest) {
       },
       {
         role: 'user',
-        content: promptMessage,
+        content: messages.user,
       },
     ],
     max_tokens: 500,
@@ -138,5 +52,8 @@ export async function POST(request: NextRequest) {
     presence_penalty: 1,
   });
 
-  return NextResponse.json(response);
+  return NextResponse.json({
+    message: response.choices[0].message.content,
+    model: response.model,
+  });
 }

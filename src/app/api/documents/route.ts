@@ -88,7 +88,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const query = `SELECT * FROM documents WHERE index_id = '${indexId}'`;
+  const query = `select id, content, metadata, index_id, source, user_id, created_at
+   from documents where index_id = '${indexId}' limit 50;`;
 
   const { data, error } = await supabaseExecute<Document>(query);
 
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
         )}', '${doc.index_id}', '${doc.source}', '${doc.user_id}')`
     )
     .join(',')}
-  RETURNING *`;
+  RETURNING content, metadata, index_id, source, user_id, created_at, id;`;
 
   const { data, error } = await supabaseExecute<Document>(query);
 
