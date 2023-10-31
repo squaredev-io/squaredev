@@ -1,5 +1,8 @@
 import { type } from 'os';
 import * as z from 'zod';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+
+extendZodWithOpenApi(z);
 
 /**
  * IMPORTANT
@@ -9,6 +12,15 @@ import * as z from 'zod';
  * Make sure to make every object schema strict and backwards compatible.
  * Zod strict: https://zod.dev/?id=strict
  */
+
+// Errors
+// ---
+
+export const ErrorResponse = z
+  .object({
+    error: z.string(),
+  })
+  .openapi('ErrorResponse');
 
 // Documents
 // ---
@@ -21,7 +33,9 @@ const DocumentBase = z
   })
   .strict();
 
-export const CreateDocumentRequest = z.array(DocumentBase);
+export const CreateDocumentRequest = z
+  .array(DocumentBase)
+  .openapi('CreateDocumentRequest');
 
 export type CreateDocumentRequestType = z.infer<typeof CreateDocumentRequest>;
 
@@ -37,15 +51,17 @@ export const SingleDocumentResponse = DocumentBase.merge(
       })
       .strict()
   )
-);
+).openapi('SingleDocumentResponse');
 
-export const DocumentsResponse = z.array(SingleDocumentResponse);
+export const DocumentsResponse = z
+  .array(SingleDocumentResponse)
+  .openapi('DocumentsResponse');
 
 export type CreateDocumentResponseType = z.infer<typeof DocumentsResponse>;
 
-export const SimilarDocumentsResponse = z.array(
-  SingleDocumentResponse.merge(z.object({ similarity: z.number() }))
-);
+export const SimilarDocumentsResponse = z
+  .array(SingleDocumentResponse.merge(z.object({ similarity: z.number() })))
+  .openapi('SimilarDocumentsResponse');
 
 // Indexes
 // ---
@@ -54,7 +70,8 @@ export const CreateIndexRequest = z
   .object({
     name: z.string(),
   })
-  .strict();
+  .strict()
+  .openapi('CreateIndexRequest');
 
 export const CreateIndexResponse = CreateIndexRequest.merge(
   z
@@ -65,11 +82,13 @@ export const CreateIndexResponse = CreateIndexRequest.merge(
       user_id: z.string(),
     })
     .strict()
-);
+).openapi('CreateIndexResponse');
 
 export type CreateIndexRequestType = z.infer<typeof CreateIndexRequest>;
 
-export const GetIndexesResponse = z.array(CreateIndexResponse);
+export const GetIndexesResponse = z
+  .array(CreateIndexResponse)
+  .openapi('GetIndexesResponse');
 
 export type GetIndexesResponseType = z.infer<typeof GetIndexesResponse>;
 
@@ -84,7 +103,8 @@ export const ChatCompletionRequest = z
     }),
     model: z.string(),
   })
-  .strict();
+  .strict()
+  .openapi('ChatCompletionRequest');
 
 export type ChatCompletionRequestType = z.infer<typeof ChatCompletionRequest>;
 
@@ -93,7 +113,8 @@ export const ChatCompletionResponse = z
     message: z.string(),
     model: z.string(),
   })
-  .strict();
+  .strict()
+  .openapi('ChatCompletionResponse');
 
 export type ChatCompletionResponseType = z.infer<typeof ChatCompletionResponse>;
 
@@ -110,7 +131,8 @@ export const RagCompletionRequest = z
     indexId: z.string(),
     withMemory: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .openapi('RagCompletionRequest');
 
 export type RagCompletionRequestType = z.infer<typeof RagCompletionRequest>;
 
@@ -124,4 +146,5 @@ export const RagCompletionResponse = z
       )
     ),
   })
-  .strict();
+  .strict()
+  .openapi('RagCompletionResponse');
