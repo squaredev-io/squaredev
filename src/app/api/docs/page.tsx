@@ -1,9 +1,15 @@
 'use client';
 
-// import 'swagger-ui-react/swagger-ui.css';
-// import SwaggerUI from 'swagger-ui-react';
+import { RedocStandalone } from 'redoc';
 
 export default function ApiDoc() {
-  // TODO: fix this. It breaks the build. Do we need it?
-  // return <SwaggerUI url="/api" />;
+  return (
+    <RedocStandalone
+      specUrl="/api"
+      options={{
+        nativeScrollbars: false,
+        theme: { colors: { primary: { main: '#0ea2f6' } } },
+      }}
+    />
+  );
 }
