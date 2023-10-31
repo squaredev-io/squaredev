@@ -5,20 +5,8 @@ import { OpenAI } from 'openai';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { supabaseExecute } from '@/lib/public-api/database';
 import { Document } from '@/types/supabase-entities';
-// import { OpenAIStream, StreamingTextResponse } from 'ai'
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-const availableModels = ['gpt-3.5-turbo'];
-
-interface ChatCompletionRequest {
-  messages: {
-    system?: string;
-    user: string;
-  };
-  model: string;
-  indexId?: string;
-  withMemory?: boolean;
-}
+import { AVAILABLE_MODELS, llm } from '@/lib/public-api/llm';
+import { RagCompletionRequestType } from '@/lib/public-api/validation';
 
 // Add documents to a knowledge base
 export async function POST(request: NextRequest) {
@@ -28,10 +16,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: authError }, { status: 401 });
   }
 
-  const { messages, model, indexId }: ChatCompletionRequest =
+  const { messages, model, indexId }: RagCompletionRequestType =
     await request.json();
 
-  if (!availableModels.includes(model)) {
+  if (!AVAILABLE_MODELS.includes(model)) {
     return NextResponse.json(
       { error: `Model ${model} not found.` },
       { status: 400 }
@@ -71,24 +59,10 @@ export async function POST(request: NextRequest) {
     sources = [...relevantDocuments];
   }
 
-  const response = await openai.chat.completions.create({
-    model: model || 'gpt-3.5-turbo',
-    stream: false,
-    messages: [
-      {
-        role: 'system',
-        content: messages.system || '',
-      },
-      {
-        role: 'user',
-        content: promptMessage,
-      },
-    ],
-    max_tokens: 500,
-    temperature: 0.7,
-    top_p: 1,
-    frequency_penalty: 1,
-    presence_penalty: 1,
+  const response = await llm({
+    message: promptMessage,
+    system: messages.system,
+    model,
   });
 
   return NextResponse.json({
