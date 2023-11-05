@@ -19,7 +19,8 @@ Use cases include:
 - 📚 Text & knowledge extraction
 - 🧹 Structure unstructured data
 
-![Flow](/public/steps.png 'steps')
+![Steps](/public/steps.png 'steps')
+
 
 ## Features
 
@@ -37,6 +38,7 @@ Use cases include:
 - [ ] Monitoring (coming soon)
   - [ ] Usage (coming soon)
   - [ ] User feedback (coming soon)
+
 
 ## Documentation
 
