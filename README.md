@@ -19,7 +19,7 @@ Use cases include:
 - 📚 Text & knowledge extraction
 - 🧹 Structure unstructured data
 
-![Flow](/public/flow.png 'Flow')
+![Flow](/public/steps.png 'steps')
 
 ## Features
 
