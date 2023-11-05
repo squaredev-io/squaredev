@@ -38,8 +38,6 @@ Use cases include:
   - [ ] Usage (coming soon)
   - [ ] User feedback (coming soon)
 
-![Steps](/public/steps.png 'Steps')
-
 ## Documentation
 
 Full documentation (coming soon)
