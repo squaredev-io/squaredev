@@ -41,7 +41,7 @@ export default function Project({ params }: { params: { projectId: string } }) {
   };
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
   const toggleIsAddingIndex = () => setIsAddingIndex(!isAddingIndex);
