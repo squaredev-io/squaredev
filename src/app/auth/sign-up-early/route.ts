@@ -6,16 +6,20 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   const requestUrl = new URL(request.url);
+  const formData = await request.formData();
+  const email = String(formData.get('email'));
+  const password = String(formData.get('password'));
   const supabase = createRouteHandlerClient({ cookies });
 
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
   });
 
   if (error) {
     console.log(error);
     return NextResponse.redirect(
-      `${requestUrl.origin}/login?error=${error.message}`,
+      `${requestUrl.origin}?error=${error.message}`,
       {
         // a 301 status is required to redirect from a POST to a GET route
         status: 301,
@@ -23,7 +27,7 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.redirect(data.url, {
+  return NextResponse.redirect(`${requestUrl.origin}/thank-you`, {
     // a 301 status is required to redirect from a POST to a GET route
     status: 301,
   });

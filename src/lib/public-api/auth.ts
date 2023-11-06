@@ -2,7 +2,7 @@ import { Project } from '@/types/supabase-entities';
 import { Result, supabaseExecute } from './database';
 
 export function getApiKey(headers: any) {
-  const authorization = headers.get('authentication');
+  const authorization = headers.get('authorization');
   if (!authorization) {
     return null;
   }

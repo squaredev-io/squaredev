@@ -2,13 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import ThemeProvider from '@/providers/ThemeProvider';
 import { Analytics } from '@vercel/analytics/react';
-import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
-
-export const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
+import { fontSans } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
