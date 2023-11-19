@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { MainNav } from './components/main-nav';
 import { UserNav } from './components/user-nav';
@@ -9,10 +7,11 @@ import { ProjectNav } from './components/project-nav';
 
 export default function MainLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { projectId: string };
 }) {
-  const params = useParams();
   return (
     <div className="relative flex min-h-screen flex-col">
       <div className="flex-1">
