@@ -11,7 +11,6 @@ export default function MainLayout({
   children: React.ReactNode;
   params?: { projectId: string };
 }) {
-  console.log(params);
   return (
     <div className="relative flex min-h-screen flex-col">
       <div className="flex-1">
@@ -20,11 +19,7 @@ export default function MainLayout({
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <Image src="/logo.png" width="120" height="64" alt="Squaredev" />
             </Link>
-            {params?.projectId ? (
-              <ProjectNav className="mx-6" projectId={params.projectId} />
-            ) : (
-              <MainNav className="mx-6" />
-            )}
+            <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
             </div>

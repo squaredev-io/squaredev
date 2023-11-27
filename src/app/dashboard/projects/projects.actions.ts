@@ -15,7 +15,7 @@ const createApiKey = async (prevState: any, formData: FormData) => {
     },
   });
 
-  if (res.status !== 200) {
+  if (res.status !== 201) {
     return {
       error: res.text(),
     };

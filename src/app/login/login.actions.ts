@@ -44,6 +44,7 @@ const signin = async (prevState: any, formData: FormData) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
+      cache: 'no-store',
     }
   );
 
