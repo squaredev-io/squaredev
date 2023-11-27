@@ -1,11 +1,5 @@
-'use client';
-
-import { Database } from '@/types/supabase';
 import { formatDistance } from 'date-fns';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import NewProject from '@/components/NewProject';
-import { Project } from '@/types/supabase-entities';
 import { Button } from '@/components/Button';
 import {
   Card,
@@ -14,26 +8,23 @@ import {
   CardHeader,
   CardTitle,
 } from '../../../components/ui/card';
-import { DollarSignIcon, MoreHorizontalIcon } from 'lucide-react';
+import { MoreHorizontalIcon } from 'lucide-react';
+import { cookies } from 'next/headers';
+import { ApiKey } from '@/types/api-keys';
 
-export default function Dashboard() {
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: '1',
-      name: 'Test',
-      api_key: null,
-      created_at: '2023-11-01 08:36:40.221753+00',
-      user_id: null,
+const getApiKeys = async () => {
+  const response = fetch(`${process.env.PLATFORM_API}/users/api-keys`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${cookies().get('access_token')?.value}`,
     },
-  ]);
-  const [createNewProjectOpen, setCreateNewProjectOpen] = useState(false);
-
-  useEffect(() => {
-    // getData();
   });
 
-  const toggleNewProjectOpen = () =>
-    setCreateNewProjectOpen(!createNewProjectOpen);
+  return (await response).json() as unknown as ApiKey[];
+};
+
+export default async function Dashboard() {
+  const apiKeys = await getApiKeys();
 
   return (
     <div className="container mx-auto py-10">
@@ -47,9 +38,9 @@ export default function Dashboard() {
         <div className="flex items-center space-x-2"></div>
       </div>
       <div className="grid gap-8 pt-12 md:grid-cols-2 lg:grid-cols-4">
-        {projects.map((project, i) => {
+        {apiKeys.map((apiKey, i) => {
           const dateWithDistance = formatDistance(
-            new Date(project.created_at),
+            new Date(apiKey.created_datetime),
             new Date(),
             {
               includeSeconds: true,
@@ -57,12 +48,12 @@ export default function Dashboard() {
             }
           );
           return (
-            <Link key={i} href={`/dashboard/projects/${project.id}`}>
+            <Link key={i} href={`/dashboard/projects/${apiKey.id}`}>
               <Card>
                 <CardHeader className="space-y-0">
                   <div className="flex flex-col space-y-1">
                     <div className="flex justify-between">
-                      <CardTitle>{project.name}</CardTitle>
+                      <CardTitle>{apiKey.name}</CardTitle>
 
                       <Button
                         variant="ghost"
