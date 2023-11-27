@@ -62,7 +62,7 @@ const signin = async (prevState: any, formData: FormData) => {
     secure: process.env.NODE_ENV === 'production',
   });
 
-  redirect('/dashboard');
+  redirect('/dashboard/projects');
 };
 
 export { signup, signin };
