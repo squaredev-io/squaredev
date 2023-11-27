@@ -1,21 +1,32 @@
 'use client';
-
-import * as React from 'react';
-
 import { cn } from '@/lib/utils';
 // import { Icons } from '@/components/icons';/
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Label } from '@/components/ui/label';
+import {
+  experimental_useFormStatus as useFormStatus,
+  // @ts-expect-error
+  experimental_useFormState as useFormState,
+} from 'react-dom';
+import { signup, signin } from '../login.actions';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+const initialFormState = {
+  error: null,
+};
+
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [signupState, signupAction] = useFormState(signup, initialFormState);
+  const [signinState, signinAction] = useFormState(signin, initialFormState);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
-      <form action="/auth/sign-up" method="post">
+      {signupState?.error}
+      {signinState?.error}
+
+      <form action={signupAction} method="post">
         <div className="grid gap-2">
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
@@ -24,11 +35,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <Input
               id="email"
               placeholder="name@example.com"
-              type="email"
+              // type="email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading}
               name="email"
             />
           </div>
@@ -40,11 +50,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               id="password"
               type="password"
               autoCorrect="off"
-              disabled={isLoading}
               name="password"
             />
           </div>
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit">
             {/* {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )} */}
@@ -76,7 +85,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading}
               name="email"
             />
           </div>
@@ -88,11 +96,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               id="password"
               type="password"
               autoCorrect="off"
-              disabled={isLoading}
               name="password"
             />
           </div>
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" formAction={signinAction}>
             {/* {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )} */}

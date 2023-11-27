@@ -4,7 +4,6 @@ import { Database } from '@/types/supabase';
 import { formatDistance } from 'date-fns';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import NewProject from '@/components/NewProject';
 import { Project } from '@/types/supabase-entities';
 import { Button } from '@/components/Button';
@@ -18,7 +17,6 @@ import {
 import { DollarSignIcon, MoreHorizontalIcon } from 'lucide-react';
 
 export default function Dashboard() {
-  const supabase = createClientComponentClient<Database>();
   const [projects, setProjects] = useState<Project[]>([
     {
       id: '1',
@@ -33,17 +31,6 @@ export default function Dashboard() {
   useEffect(() => {
     // getData();
   });
-
-  const getData = async () => {
-    const { data: projects, error: projectsError } = await supabase
-      .from('projects')
-      .select('*');
-
-    if (projectsError) {
-      alert(`Error fetching data: projects: ${projectsError?.message}`);
-    }
-    setProjects(projects || []);
-  };
 
   const toggleNewProjectOpen = () =>
     setCreateNewProjectOpen(!createNewProjectOpen);

@@ -1,6 +1,5 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useState, useEffect } from 'react';
 import { Database } from '@/types/supabase';
 import { Index, Document } from '@/types/supabase-entities';
@@ -11,7 +10,6 @@ export default function Index({
 }: {
   params: { projectId: string; indexId: string };
 }) {
-  const supabase = createClientComponentClient<Database>();
   const [file, setFile] = useState<File>();
   const [index, setIndex] = useState<Index | null>(null);
   const [documents, setDocuments] = useState<Document[] | []>([]);
@@ -23,53 +21,9 @@ export default function Index({
     setEditedText(text);
   };
 
-  const handleSaveClick = async (id: string) => {
-    const document = documents?.find((d) => d.id === id);
-    if (!document) return;
-
-    console.log(id);
-
-    const { data: updatedDocument, error } = await supabase
-      .from('documents')
-      .update({ content: editedText })
-      .eq('id', id);
-
-    if (error) {
-      alert(`Error updating document: ${error.message}`);
-      return;
-    }
-    setEditingId(null);
-    setEditedText('');
-    getData();
-  };
-
   const handleCancelClick = () => {
     setEditingId(null);
     setEditedText('');
-  };
-
-  const getData = async () => {
-    const { data: index, error: indexError } = await supabase
-      .from('indexes')
-      .select('*')
-      .eq('id', params.indexId)
-      .single();
-
-    if (indexError) {
-      alert(`Error fetching data: ${indexError}`);
-    }
-
-    const { data: documents, error: documentsError } = await supabase
-      .from('documents')
-      .select('*')
-      .eq('index_id', params.indexId);
-
-    if (documentsError) {
-      alert(`Error fetching data:Documents: ${documentsError}`);
-    }
-
-    setIndex(index || null);
-    setDocuments(documents || []);
   };
 
   useEffect(() => {
@@ -126,7 +80,7 @@ export default function Index({
                 value={editedText}
                 onChange={(e) => setEditedText(e.target.value)}
               />
-              <button onClick={() => handleSaveClick(document.id)}>Save</button>
+              <button>Save</button>
               <button onClick={handleCancelClick}>Cancel</button>
             </div>
           ) : (

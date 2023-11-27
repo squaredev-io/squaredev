@@ -1,18 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/dashboard/projects',
-        permanent: true,
-      },
-      {
-        source: '/dashboard',
-        destination: '/dashboard/projects',
-        permanent: true,
-      },
-    ];
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 };
 
