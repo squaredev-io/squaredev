@@ -1,14 +1,13 @@
 'use client';
 
 import Button from '@/components/Button';
+import { Project } from '@/types/project';
 import { useState } from 'react';
-import { deleteProject } from '@/app/actions';
 import {
   experimental_useFormStatus as useFormStatus,
   // @ts-expect-error
   experimental_useFormState as useFormState,
 } from 'react-dom';
-import { Project } from '@/types/supabase-entities';
 
 const initialState = {
   message: null,
@@ -23,7 +22,7 @@ export default function Menu({
 }) {
   // state for modal
   const [isOpen, setIsOpen] = useState(false);
-  const [state, formAction] = useFormState(deleteProject, initialState);
+  // const [state, formAction] = useFormState(deleteProject, initialState);
 
   return (
     <>
@@ -37,7 +36,7 @@ export default function Menu({
         </Button>
       </div>
       {isOpen && (
-        <form action={formAction}>
+        <form>
           <input type="hidden" name="project-id" value={project.id} />
           <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50 text-slate-950">
             <div className="relative z-50 w-11/12 p-8 bg-white border border-gray-300 rounded-lg">

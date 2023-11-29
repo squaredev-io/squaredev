@@ -10,14 +10,14 @@ import Menu from './menu';
 import Link from 'next/link';
 import { Button } from '../../../components/ui/button';
 import { formatDistance } from 'date-fns';
-import { Project } from '@/types/supabase-entities';
+import { Project } from '@/types/project';
 
 export default function ProjectsList({ projects }: { projects: Project[] }) {
   return (
     <>
       {projects.map((project, i) => {
         const dateWithDistance = formatDistance(
-          new Date(project.created_at),
+          new Date(project.created_datetime),
           new Date(),
           {
             includeSeconds: true,
@@ -25,14 +25,14 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
           }
         );
         return (
-          <Card>
+          <Card key={i}>
             <CardHeader className="space-y-0">
               <div className="flex flex-col space-y-1">
                 <div className="flex justify-between">
-                  <Link key={i} href={`/dashboard/projects/${project.id}`}>
+                  <Link href={`/dashboard/projects/${project.id}`}>
                     <CardTitle>{project.name}</CardTitle>
                   </Link>
-                  <Menu project={project}></Menu>
+
                   <Button
                     variant="ghost"
                     className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
@@ -42,7 +42,10 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
                   </Button>
                 </div>
 
-                <CardDescription>{project.description}</CardDescription>
+                <CardDescription>
+                  Add a nice description here. @Mega add a field in the database
+                  please.
+                </CardDescription>
               </div>
             </CardHeader>
             <CardContent>

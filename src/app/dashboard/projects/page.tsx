@@ -1,34 +1,31 @@
-import { Database } from '@/types/supabase';
+import { formatDistance } from 'date-fns';
 import Link from 'next/link';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button } from '@/components/Button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../../components/ui/card';
+import { MoreHorizontalIcon } from 'lucide-react';
 import { cookies } from 'next/headers';
+import { Project } from '@/types/project';
 import ProjectsList from './projects-list';
 
-const supabase = createServerComponentClient<Database>({ cookies });
+const getApiKeys = async () => {
+  const response = fetch(`${process.env.PLATFORM_API}/users/api-keys`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${cookies().get('access_token')?.value}`,
+    },
+  });
 
-const getData = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  const { data: projects, error: projectsError } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('user_id', user.id);
-
-  if (projectsError) {
-    console.log(`Error fetching data: projects: ${projectsError?.message}`);
-  }
-  return projects || [];
+  return (await response).json() as unknown as Project[];
 };
 
 export default async function Dashboard() {
-  const projects = await getData();
+  const apiKeys = await getApiKeys();
 
   return (
     <div className="container mx-auto py-10">
@@ -49,7 +46,7 @@ export default async function Dashboard() {
         <div className="flex items-center space-x-2"></div>
       </div>
       <div className="grid gap-8 pt-12 md:grid-cols-2 lg:grid-cols-4">
-        <ProjectsList projects={projects} />
+        <ProjectsList projects={apiKeys} />
       </div>
     </div>
   );

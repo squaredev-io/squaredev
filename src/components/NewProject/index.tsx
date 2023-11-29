@@ -1,8 +1,6 @@
 'use client';
 
-import { Database } from '../../types/supabase';
 import { ChangeEvent, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 
@@ -11,21 +9,7 @@ type NewProjectFormProps = {
 };
 
 export default function NewProject({ closeForm }: NewProjectFormProps) {
-  const supabase = createClientComponentClient<Database>();
   const [formData, setFormData] = useState({ name: '' });
-
-  const createNewProject = async (e: any) => {
-    e.preventDefault();
-    const { data, error } = await supabase.from('projects').insert({
-      name: formData.name,
-    });
-    if (error) {
-      console.error(error);
-      alert(error.message);
-    } else {
-      closeForm();
-    }
-  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -33,7 +17,7 @@ export default function NewProject({ closeForm }: NewProjectFormProps) {
   };
 
   return (
-    <form className="new-project" onSubmit={createNewProject}>
+    <form className="new-project">
       <div className="flex w-full max-w-sm items-center space-x-2">
         <Input
           type="text"

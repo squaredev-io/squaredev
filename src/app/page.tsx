@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Label } from '@/components/ui/label';
+import { signup } from './login/login.actions';
 
 export const metadata: Metadata = {
   title: 'Authentication',
@@ -65,7 +66,12 @@ export default function Login() {
               </p>
             </div>
             <div className={cn('grid gap-6')}>
-              <form action="/auth/sign-up-early" method="post">
+              <form
+                action={async (formData) => {
+                  'use server';
+                  signup(null, formData);
+                }}
+              >
                 <div className="grid gap-2">
                   <div className="grid gap-1">
                     <Label className="sr-only" htmlFor="email">

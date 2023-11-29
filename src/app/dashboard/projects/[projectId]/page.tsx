@@ -1,76 +1,35 @@
-'use client';
-
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useState, useEffect } from 'react';
-import { Database } from '@/types/supabase';
-import { Index, IndexInsert, Project } from '@/types/supabase-entities';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { get } from 'cypress/types/lodash';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { Project } from '@/types/project';
 
-export default function Project({ params }: { params: { projectId: string } }) {
-  const supabase = createClientComponentClient<Database>();
-  const [project, setProject] = useState<Project | null>(null);
-  const [indexes, setIndexes] = useState<Index[]>([]);
-  const [isAddingIndex, setIsAddingIndex] = useState(false);
-  const [indexName, setIndexName] = useState('');
-
-  const getData = async () => {
-    const { data: project, error: projectError } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('id', params.projectId)
-      .single();
-
-    if (projectError) {
-      alert(`Error fetching data: project: ${projectError}`);
+const loadProject = async (projectId: string) => {
+  const res = await fetch(
+    `${process.env.PLATFORM_API}/users/api-keys/${projectId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${cookies().get('access_token')?.value}`,
+      },
     }
+  );
+  const json = (await res.json()) as Project;
+  return json;
+};
 
-    const { data: indexes, error: indexesError } = await supabase
-      .from('indexes')
-      .select('*')
-      .eq('project_id', params.projectId);
-
-    if (indexesError) {
-      alert(`Error fetching data: indexes: ${indexesError}`);
-    }
-
-    setProject(project);
-    setIndexes(indexes || []);
-  };
-
-  useEffect(() => {
-    // getData();
-  }, []);
-
-  const toggleIsAddingIndex = () => setIsAddingIndex(!isAddingIndex);
-
-  const handleIndexNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setIndexName(e.target.value);
-
-  const addIndex = async () => {
-    const newIndex: IndexInsert = {
-      name: indexName,
-      project_id: params.projectId,
-    };
-    const { data: index, error: indexError } = await supabase
-      .from('indexes')
-      .insert(newIndex)
-      .single();
-
-    if (indexError) {
-      alert(`Error adding index: ${indexError}`);
-    }
-
-    getData();
-    toggleIsAddingIndex();
-  };
+export default async function Project({
+  params,
+}: {
+  params: { projectId: string };
+}) {
+  const project = await loadProject(params.projectId);
 
   return (
     <>
-      <h1>project: {project?.name || 'Not found'}</h1>
-      <Button onClick={toggleIsAddingIndex}>Add index</Button>
+      <h1>Api Key: {project.key}</h1>
+      {/* <Button onClick={toggleIsAddingIndex}>Add index</Button>
 
       {isAddingIndex && (
         <>
@@ -80,10 +39,7 @@ export default function Project({ params }: { params: { projectId: string } }) {
             placeholder="index name"
             name="name"
           />
-          <Button
-            disabled={!!indexes.find((i) => i.name === indexName)}
-            onClick={addIndex}
-          >
+          <Button disabled={!!indexes.find((i) => i.name === indexName)}>
             add
           </Button>
         </>
@@ -98,7 +54,7 @@ export default function Project({ params }: { params: { projectId: string } }) {
             </Link>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </>
   );
 }
