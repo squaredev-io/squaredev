@@ -34,6 +34,13 @@ export default async function Dashboard() {
           <p className="text-muted-foreground">
             Your projects will be shown here.
           </p>
+          <Button
+            variant="default"
+            className="flex h-8 w-30 p-0 data-[state=open]:bg-muted"
+          >
+            <Link href="/dashboard/projects/new">New project</Link>
+            <span className="sr-only">Open menu</span>
+          </Button>
         </div>
         <div className="flex items-center space-x-2"></div>
       </div>
