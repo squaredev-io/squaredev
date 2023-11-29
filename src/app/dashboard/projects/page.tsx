@@ -10,7 +10,8 @@ import {
 } from '../../../components/ui/card';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { cookies } from 'next/headers';
-import { ApiKey } from '@/types/api-keys';
+import { Project } from '@/types/project';
+import ProjectsList from './projects-list';
 
 const getApiKeys = async () => {
   const response = fetch(`${process.env.PLATFORM_API}/users/api-keys`, {
@@ -20,7 +21,7 @@ const getApiKeys = async () => {
     },
   });
 
-  return (await response).json() as unknown as ApiKey[];
+  return (await response).json() as unknown as Project[];
 };
 
 export default async function Dashboard() {
@@ -45,47 +46,7 @@ export default async function Dashboard() {
         <div className="flex items-center space-x-2"></div>
       </div>
       <div className="grid gap-8 pt-12 md:grid-cols-2 lg:grid-cols-4">
-        {apiKeys.map((apiKey, i) => {
-          const dateWithDistance = formatDistance(
-            new Date(apiKey.created_datetime),
-            new Date(),
-            {
-              includeSeconds: true,
-              addSuffix: true,
-            }
-          );
-          return (
-            <Link key={i} href={`/dashboard/projects/${apiKey.id}`}>
-              <Card>
-                <CardHeader className="space-y-0">
-                  <div className="flex flex-col space-y-1">
-                    <div className="flex justify-between">
-                      <CardTitle>{apiKey.name}</CardTitle>
-
-                      <Button
-                        variant="ghost"
-                        className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-                      >
-                        <MoreHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </div>
-
-                    <CardDescription>
-                      Add a nice description here. @Mega add a field in the
-                      database please.
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex space-x-4 text-sm text-muted-foreground">
-                    <div>{dateWithDistance}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
+        <ProjectsList projects={apiKeys} />
       </div>
     </div>
   );

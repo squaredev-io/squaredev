@@ -4,7 +4,7 @@ import Input from '@/components/Input';
 import { get } from 'cypress/types/lodash';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
-import { ApiKey } from '@/types/api-keys';
+import { Project } from '@/types/project';
 
 const loadProject = async (projectId: string) => {
   const res = await fetch(
