@@ -15,7 +15,7 @@ const loadProject = async (projectId: string) => {
       },
     }
   );
-  const json = (await res.json()) as ApiKey;
+  const json = (await res.json()) as Project;
   return json;
 };
 

@@ -25,11 +25,11 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
           }
         );
         return (
-          <Card>
+          <Card key={i}>
             <CardHeader className="space-y-0">
               <div className="flex flex-col space-y-1">
                 <div className="flex justify-between">
-                  <Link key={i} href={`/dashboard/projects/${project.id}`}>
+                  <Link href={`/dashboard/projects/${project.id}`}>
                     <CardTitle>{project.name}</CardTitle>
                   </Link>
 
