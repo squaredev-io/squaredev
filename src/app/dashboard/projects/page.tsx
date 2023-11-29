@@ -46,7 +46,7 @@ export default async function Dashboard() {
         <div className="flex items-center space-x-2"></div>
       </div>
       <div className="grid gap-8 pt-12 md:grid-cols-2 lg:grid-cols-4">
-        <ProjectsList projects={apiKeys} />
+        <ProjectsList projects={apiKeys ?? []} />
       </div>
     </div>
   );
